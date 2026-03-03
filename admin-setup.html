@@ -76,6 +76,12 @@
             border-color: #2d3b45;
         }
 
+        a.btn {
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+        }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -300,6 +306,13 @@
         .preset-avatar.selected {
             border-color: #2d3b45;
             box-shadow: 0 0 0 3px rgba(45, 59, 69, 0.2);
+        }
+
+        .preset-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
         }
 
         /* Toggle Switch */
@@ -543,6 +556,8 @@
             <h1>AI Voice Assessment Setup</h1>
             <div class="header-actions">
                 <button class="btn btn-secondary">Cancel</button>
+                <a href="learner-view.html" target="_blank" rel="noopener" class="btn btn-secondary" title="Test the scenario as a learner">Playground</a>
+                <a href="analytics.html" class="btn btn-secondary" title="View class list, transcripts, and AI feedback">Analytics</a>
                 <button class="btn btn-primary" id="save-assessment-btn">Save Assessment</button>
             </div>
         </div>
@@ -713,7 +728,7 @@
                     </svg>
                     Assessment Boundaries
                 </div>
-                <p class="label-description" style="margin-bottom: 12px;">Optional. Turn on to set time or turn limits.</p>
+                <p class="label-description" style="margin-bottom: 12px;">Optional. Turn on to set time, turn, or attempt limits.</p>
                 <div class="boundaries-toggle-row">
                     <div>
                         <div class="switch-label">Time limit</div>
@@ -746,6 +761,22 @@
                     <div class="form-group">
                         <label for="max-turns">Max turns</label>
                         <input type="number" id="max-turns" min="0" value="0" style="max-width: 100px;">
+                    </div>
+                </div>
+                <div class="boundaries-toggle-row">
+                    <div>
+                        <div class="switch-label">Limit attempts</div>
+                        <div class="switch-description">How many times a learner can take this assessment</div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="toggle-max-attempts">
+                        <span class="switch-slider"></span>
+                    </label>
+                </div>
+                <div class="boundaries-options" id="max-attempts-options">
+                    <div class="form-group">
+                        <label for="max-attempts">Attempts allowed</label>
+                        <input type="number" id="max-attempts" min="1" value="1" style="max-width: 100px;">
                     </div>
                 </div>
             </div>
@@ -876,6 +907,18 @@
                     <option value="default">Voice Assessment Rubric (default)</option>
                 </select>
             </div>
+            <div class="form-group" style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #e8e8e8;">
+                <div class="switch-row" style="padding-top: 0;">
+                    <div>
+                        <div class="switch-label">Require admin review before feedback is shown to learners</div>
+                        <div class="switch-description">When on, AI feedback is held for your review; you approve or edit before learners see it.</div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="review-feedback-before-release">
+                        <span class="switch-slider"></span>
+                    </label>
+                </div>
+            </div>
         </section>
 
         <!-- Tool Integrations -->
@@ -993,6 +1036,9 @@
         document.getElementById('toggle-max-turns').addEventListener('change', function() {
             document.getElementById('max-turns-options').classList.toggle('visible', this.checked);
         });
+        document.getElementById('toggle-max-attempts').addEventListener('change', function() {
+            document.getElementById('max-attempts-options').classList.toggle('visible', this.checked);
+        });
 
         const AVATAR_STORAGE_KEY = 'aiVoiceAssessmentAvatar';
         const avatarPreview = document.querySelector('.avatar-preview');
@@ -1071,12 +1117,14 @@
                 learnerInstructions: document.getElementById('learner-instructions').value.trim(),
                 timeLimitMinutes: document.getElementById('toggle-time-limit').checked ? (parseInt(document.getElementById('time-limit').value, 10) || 0) : 0,
                 maxTurns: document.getElementById('toggle-max-turns').checked ? (parseInt(document.getElementById('max-turns').value, 10) || 0) : 0,
+                maxAttempts: document.getElementById('toggle-max-attempts').checked ? (parseInt(document.getElementById('max-attempts').value, 10) || 1) : 0,
                 mode: mode,
                 questionCount: parseInt(document.getElementById('question-count').value, 10) || 5,
                 questionOrder: (document.querySelector('input[name="question-order"]:checked') || {}).value || 'fixed',
                 questions: questions,
                 scoringType: (document.querySelector('input[name="scoring-type"]:checked') || {}).value || 'feedback-only',
-                passFailThreshold: parseInt(document.getElementById('pass-fail-threshold').value, 10) || 70
+                passFailThreshold: parseInt(document.getElementById('pass-fail-threshold').value, 10) || 70,
+                reviewFeedbackBeforeRelease: document.getElementById('review-feedback-before-release').checked
             };
             try {
                 localStorage.setItem(CONFIG_KEY, JSON.stringify(config));

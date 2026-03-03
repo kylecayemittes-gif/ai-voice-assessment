@@ -524,10 +524,7 @@
         <div class="assessment-card">
             <div class="avatar-container">
                 <div class="avatar">
-                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <circle cx="12" cy="8" r="4"/>
-                        <path d="M20 21a8 8 0 0 0-16 0"/>
-                    </svg>
+                    <img src="assets/preset-angry-customer.png" alt="Avatar">
                 </div>
                 <div class="avatar-ring" id="avatar-ring"></div>
             </div>
@@ -622,7 +619,7 @@
     </div>
 
     <script>
-        // Load admin-configured avatar and config from localStorage
+        // Load admin-configured avatar and config from localStorage (custom avatar overrides default)
         (function() {
             try {
                 const dataUrl = localStorage.getItem('aiVoiceAssessmentAvatar');
@@ -630,6 +627,7 @@
                 if (dataUrl && avatarEl) {
                     avatarEl.innerHTML = '<img src="' + dataUrl + '" alt="Avatar">';
                 }
+                // else: default avatar (angry customer image) is already in the HTML
                 const configJson = localStorage.getItem('aiVoiceAssessmentConfig');
                 if (configJson) {
                     const c = JSON.parse(configJson);

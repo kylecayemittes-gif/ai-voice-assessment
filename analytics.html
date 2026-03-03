@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics - AI Voice Assessment</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background-color: #f5f5f5;
+            color: #2d3b45;
+            line-height: 1.6;
+        }
+        .header {
+            background: #ffffff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 16px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 { font-size: 20px; font-weight: 600; color: #2d3b45; }
+        .header-actions { display: flex; gap: 12px; }
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+        }
+        .btn-secondary {
+            background: #ffffff;
+            color: #2d3b45;
+            border: 1px solid #d0d0d0;
+        }
+        .btn-secondary:hover { background: #f5f5f5; border-color: #2d3b45; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+        .card {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e8e8e8;
+        }
+        .card-header h2 { font-size: 16px; font-weight: 600; color: #2d3b45; }
+        .class-table { width: 100%; border-collapse: collapse; }
+        .class-table th,
+        .class-table td { padding: 12px 16px; text-align: left; border-bottom: 1px solid #e8e8e8; }
+        .class-table th {
+            background: #f5f5f5;
+            font-size: 13px;
+            font-weight: 600;
+            color: #6b7780;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
+        .class-table tr:hover td { background: #fafafa; }
+        .learner-name { font-weight: 500; color: #2d3b45; }
+        .btn-link {
+            background: none;
+            border: none;
+            color: #2d3b45;
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 0;
+        }
+        .btn-link:hover { color: #1a252f; }
+        .detail-panel {
+            display: none;
+            margin-top: 12px;
+            padding: 16px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            font-size: 14px;
+            white-space: pre-wrap;
+        }
+        .detail-panel.visible { display: block; }
+        .detail-panel h4 { font-size: 13px; color: #6b7780; margin-bottom: 8px; }
+        .detail-panel .content { color: #2d3b45; }
+        .empty-state { color: #6b7780; font-size: 14px; padding: 24px; text-align: center; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1>AI Voice Assessment — Analytics</h1>
+            <div class="header-actions">
+                <a href="admin-setup.html" class="btn btn-secondary">Back to Setup</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="card">
+            <div class="card-header">
+                <h2>Class list</h2>
+            </div>
+            <p class="empty-state" style="margin-bottom: 16px;">For each learner you can view their attempt(s), transcript, and AI feedback. Data appears here once learners complete assessments (placeholder data shown below).</p>
+            <table class="class-table">
+                <thead>
+                    <tr>
+                        <th>Learner</th>
+                        <th>Attempt</th>
+                        <th>Transcript</th>
+                        <th>AI feedback</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-learner="1">
+                        <td class="learner-name">Jordan Lee</td>
+                        <td>1 of 3</td>
+                        <td>
+                            <button type="button" class="btn-link btn-view-transcript" data-for="1">View</button>
+                            <div id="transcript-1" class="detail-panel">
+                                <h4>Conversation transcript</h4>
+                                <div class="content">AI: Hi, I'm Alex Rivera. What would you like to cover today?
+Learner: I wanted to go over the project timeline and the last deliverable.
+AI: Sure. I'd be happy to walk through that. Which part would you like to start with—the timeline or the deliverable?
+Learner: Let's start with the timeline.
+AI: The timeline has the first milestone due next Friday, with the full draft by end of month.</div>
+                            </div>
+                        </td>
+                        <td>
+                            <button type="button" class="btn-link btn-view-feedback" data-for="1">View</button>
+                            <div id="feedback-1" class="detail-panel">
+                                <h4>AI feedback</h4>
+                                <div class="content">You stayed on topic and asked a clear follow-up. To strengthen your next attempt, try summarizing what you heard before asking for more detail (e.g., "So the first milestone is next Friday—can you walk me through the deliverable next?").</div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-learner="2">
+                        <td class="learner-name">Sam Chen</td>
+                        <td>2 of 3</td>
+                        <td>
+                            <button type="button" class="btn-link btn-view-transcript" data-for="2">View</button>
+                            <div id="transcript-2" class="detail-panel">
+                                <h4>Conversation transcript</h4>
+                                <div class="content">AI: Hi, I'm Alex Rivera. What would you like to cover today?
+Learner: I had a few questions about the scope and next steps.
+AI: Of course. Let me pull up the scope doc and we can walk through the next steps.</div>
+                            </div>
+                        </td>
+                        <td>
+                            <button type="button" class="btn-link btn-view-feedback" data-for="2">View</button>
+                            <div id="feedback-2" class="detail-panel">
+                                <h4>AI feedback</h4>
+                                <div class="content">Good opening. In your next attempt, add one specific item you want to clarify (e.g., "I'd like to confirm the scope for Phase 2") so the conversation stays focused.</div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-learner="3">
+                        <td class="learner-name">Morgan Taylor</td>
+                        <td>1 of 3</td>
+                        <td>
+                            <button type="button" class="btn-link btn-view-transcript" data-for="3">View</button>
+                            <div id="transcript-3" class="detail-panel">
+                                <h4>Conversation transcript</h4>
+                                <div class="content">(No transcript yet.)</div>
+                            </div>
+                        </td>
+                        <td>
+                            <button type="button" class="btn-link btn-view-feedback" data-for="3">View</button>
+                            <div id="feedback-3" class="detail-panel">
+                                <h4>AI feedback</h4>
+                                <div class="content">(No feedback yet.)</div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script>
+        document.querySelectorAll('.btn-view-transcript').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const id = this.getAttribute('data-for');
+                const panel = document.getElementById('transcript-' + id);
+                panel.classList.toggle('visible');
+                this.textContent = panel.classList.contains('visible') ? 'Hide' : 'View';
+            });
+        });
+        document.querySelectorAll('.btn-view-feedback').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const id = this.getAttribute('data-for');
+                const panel = document.getElementById('feedback-' + id);
+                panel.classList.toggle('visible');
+                this.textContent = panel.classList.contains('visible') ? 'Hide' : 'View';
+            });
+        });
+    </script>
+</body>
+</html>
