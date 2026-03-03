@@ -204,7 +204,8 @@
             background: #fafafa;
         }
 
-        .dropzone:hover {
+        .dropzone:hover,
+        .dropzone.dragover {
             border-color: #2d3b45;
             background: #f5f5f5;
         }
@@ -486,7 +487,8 @@
                     </span>
                 </div>
                 <div>
-                    <div class="dropzone">
+                    <input type="file" id="avatar-file" accept="image/png,image/jpeg,image/jpg" hidden>
+                    <div class="dropzone" id="avatar-dropzone">
                         <div class="dropzone-icon">
                             <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
@@ -496,7 +498,7 @@
                         </div>
                         <p class="dropzone-text">
                             <strong>Click to upload</strong> or drag and drop<br>
-                            PNG, JPG up to 5MB
+                            PNG, JPG up to 10MB
                         </p>
                     </div>
                     <div class="preset-avatars">
@@ -525,7 +527,7 @@
 
             <div class="form-group">
                 <label for="assessment-name">Assessment Name</label>
-                <input type="text" id="assessment-name" placeholder="e.g., Patient Consultation Practice">
+                <input type="text" id="assessment-name" placeholder="e.g., Client Check-in Practice">
             </div>
 
             <div class="form-group">
@@ -539,11 +541,11 @@
             <div class="two-column">
                 <div class="form-group">
                     <label for="persona-name">Persona Name</label>
-                    <input type="text" id="persona-name" placeholder="e.g., Dr. Smith, Customer Sarah">
+                    <input type="text" id="persona-name" placeholder="e.g., Alex Rivera, Client">
                 </div>
                 <div class="form-group">
                     <label for="persona-role">Persona Role</label>
-                    <input type="text" id="persona-role" placeholder="e.g., Hiring Manager, Patient">
+                    <input type="text" id="persona-role" placeholder="e.g., Hiring Manager, Client">
                 </div>
             </div>
 
@@ -552,7 +554,7 @@
                     Identity Prompt
                     <span class="label-description">System instructions defining how the AI should behave and respond</span>
                 </label>
-                <textarea id="identity-prompt" placeholder="You are a patient visiting a doctor's office for a routine checkup. You have mild concerns about occasional headaches. Be cooperative but ask clarifying questions when medical terms are used..."></textarea>
+                <textarea id="identity-prompt" placeholder="You are a client meeting with your account manager. You have questions about the recent deliverable and timeline. Be professional but ask clarifying questions when needed..."></textarea>
             </div>
         </section>
 
@@ -723,11 +725,56 @@
             });
         });
 
-        // Preset avatar selection
+        const AVATAR_STORAGE_KEY = 'aiVoiceAssessmentAvatar';
+        const avatarPreview = document.querySelector('.avatar-preview');
+        const avatarFileInput = document.getElementById('avatar-file');
+        const avatarDropzone = document.getElementById('avatar-dropzone');
+
+        function setAvatarPreview(dataUrl) {
+            if (dataUrl) {
+                avatarPreview.innerHTML = '<img src="' + dataUrl + '" alt="Avatar">';
+                try { localStorage.setItem(AVATAR_STORAGE_KEY, dataUrl); } catch (e) { /* quota */ }
+            } else {
+                avatarPreview.innerHTML = '<span class="placeholder"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 0 0-16 0"/></svg></span>';
+                try { localStorage.removeItem(AVATAR_STORAGE_KEY); } catch (e) {}
+            }
+        }
+
+        function handleAvatarFile(file) {
+            if (!file || !file.type.match(/^image\/(png|jpe?g)$/i)) return;
+            if (file.size > 10 * 1024 * 1024) { alert('Please choose an image under 10MB.'); return; }
+            const reader = new FileReader();
+            reader.onload = function() { setAvatarPreview(reader.result); };
+            reader.readAsDataURL(file);
+        }
+
+        avatarDropzone.addEventListener('click', () => avatarFileInput.click());
+        avatarFileInput.addEventListener('change', function() {
+            const file = this.files[0];
+            handleAvatarFile(file);
+            this.value = '';
+        });
+
+        avatarDropzone.addEventListener('dragover', function(e) { e.preventDefault(); this.classList.add('dragover'); });
+        avatarDropzone.addEventListener('dragleave', function() { this.classList.remove('dragover'); });
+        avatarDropzone.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.classList.remove('dragover');
+            handleAvatarFile(e.dataTransfer.files[0]);
+        });
+
+        // Restore saved avatar on load
+        try {
+            const saved = localStorage.getItem(AVATAR_STORAGE_KEY);
+            if (saved) setAvatarPreview(saved);
+        } catch (e) {}
+
+        // Preset avatar selection (clears custom upload so learner shows default)
         document.querySelectorAll('.preset-avatar').forEach(avatar => {
             avatar.addEventListener('click', () => {
                 document.querySelectorAll('.preset-avatar').forEach(a => a.classList.remove('selected'));
                 avatar.classList.add('selected');
+                setAvatarPreview(null);
             });
         });
 
