@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Voice Assessment - Canvas Career</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background-color: #f5f5f5;
+            color: #2d3b45;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: #ffffff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 16px 24px;
+        }
+
+        .header-content {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2d3b45;
+        }
+
+        .header-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            background: #f0f0f0;
+            border-radius: 20px;
+            font-size: 13px;
+            color: #6b7780;
+        }
+
+        .header-badge .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+        }
+
+        .main-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 24px;
+        }
+
+        .assessment-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 48px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Avatar */
+        .avatar-container {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 32px;
+        }
+
+        .avatar {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 64px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .avatar-ring {
+            position: absolute;
+            top: -8px;
+            left: -8px;
+            right: -8px;
+            bottom: -8px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .avatar-ring.listening {
+            border-color: #10b981;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .avatar-ring.speaking {
+            border-color: #3b82f6;
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        .avatar-ring.processing {
+            border-color: #f59e0b;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Assessment Info */
+        .assessment-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #2d3b45;
+            margin-bottom: 8px;
+        }
+
+        .assessment-subtitle {
+            font-size: 15px;
+            color: #6b7780;
+            margin-bottom: 32px;
+        }
+
+        /* Status Indicator */
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 24px;
+            background: #f5f5f5;
+            border-radius: 30px;
+            margin-bottom: 32px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #6b7780;
+            transition: all 0.3s ease;
+        }
+
+        .status-indicator .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #d0d0d0;
+            transition: all 0.3s ease;
+        }
+
+        .status-indicator.ready .status-dot {
+            background: #10b981;
+        }
+
+        .status-indicator.listening {
+            background: #ecfdf5;
+            color: #059669;
+        }
+
+        .status-indicator.listening .status-dot {
+            background: #10b981;
+            animation: blink 1s ease-in-out infinite;
+        }
+
+        .status-indicator.speaking {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+
+        .status-indicator.speaking .status-dot {
+            background: #3b82f6;
+            animation: blink 0.5s ease-in-out infinite;
+        }
+
+        .status-indicator.processing {
+            background: #fffbeb;
+            color: #d97706;
+        }
+
+        .status-indicator.processing .status-dot {
+            background: #f59e0b;
+            animation: blink 0.3s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        /* Control Button */
+        .control-button {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: none;
+            background: #2d3b45;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(45, 59, 69, 0.3);
+        }
+
+        .control-button:hover {
+            transform: scale(1.05);
+            background: #1a252f;
+        }
+
+        .control-button:active {
+            transform: scale(0.98);
+        }
+
+        .control-button.active {
+            background: #dc2626;
+        }
+
+        .control-button.active:hover {
+            background: #b91c1c;
+        }
+
+        .control-button svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        .control-hint {
+            font-size: 13px;
+            color: #9ca3af;
+            margin-bottom: 32px;
+        }
+
+        /* Transcript Area */
+        .transcript-area {
+            background: #fafafa;
+            border-radius: 12px;
+            padding: 20px;
+            min-height: 100px;
+            max-height: 200px;
+            overflow-y: auto;
+            text-align: left;
+            border: 1px solid #e8e8e8;
+        }
+
+        .transcript-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .transcript-message {
+            margin-bottom: 12px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .transcript-message:last-child {
+            margin-bottom: 0;
+        }
+
+        .transcript-message.ai {
+            color: #2d3b45;
+        }
+
+        .transcript-message.ai::before {
+            content: "AI: ";
+            font-weight: 600;
+            color: #3b82f6;
+        }
+
+        .transcript-message.user {
+            color: #6b7780;
+        }
+
+        .transcript-message.user::before {
+            content: "You: ";
+            font-weight: 600;
+            color: #10b981;
+        }
+
+        .transcript-empty {
+            color: #9ca3af;
+            font-style: italic;
+            text-align: center;
+        }
+
+        /* Footer Actions */
+        .footer-actions {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid #e8e8e8;
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-secondary {
+            background: #ffffff;
+            color: #2d3b45;
+            border: 1px solid #d0d0d0;
+        }
+
+        .btn-secondary:hover {
+            background: #f5f5f5;
+            border-color: #2d3b45;
+        }
+
+        .btn-danger {
+            background: #fee2e2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        .btn-danger:hover {
+            background: #fecaca;
+        }
+
+        /* Instructions Modal (shown initially) */
+        .instructions-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        .instructions-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .instructions-modal {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+        }
+
+        .instructions-icon {
+            width: 64px;
+            height: 64px;
+            background: #f0f0f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+        }
+
+        .instructions-icon svg {
+            width: 32px;
+            height: 32px;
+            color: #2d3b45;
+        }
+
+        .instructions-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #2d3b45;
+            margin-bottom: 12px;
+        }
+
+        .instructions-text {
+            font-size: 15px;
+            color: #6b7780;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .instructions-list {
+            text-align: left;
+            margin-bottom: 32px;
+            padding: 20px;
+            background: #fafafa;
+            border-radius: 12px;
+        }
+
+        .instructions-list li {
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: #2d3b45;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .instructions-list li:last-child {
+            margin-bottom: 0;
+        }
+
+        .instructions-list .check {
+            width: 20px;
+            height: 20px;
+            background: #10b981;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .instructions-list .check svg {
+            width: 12px;
+            height: 12px;
+            color: white;
+        }
+
+        .btn-primary {
+            background: #2d3b45;
+            color: #ffffff;
+            padding: 14px 32px;
+            font-size: 15px;
+        }
+
+        .btn-primary:hover {
+            background: #1a252f;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .assessment-card {
+                padding: 32px 24px;
+            }
+
+            .avatar-container {
+                width: 140px;
+                height: 140px;
+            }
+
+            .avatar {
+                width: 140px;
+                height: 140px;
+                font-size: 48px;
+            }
+
+            .assessment-title {
+                font-size: 20px;
+            }
+
+            .control-button {
+                width: 70px;
+                height: 70px;
+            }
+
+            .control-button svg {
+                width: 28px;
+                height: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1>Patient Consultation Practice</h1>
+            <div class="header-badge">
+                <span class="dot"></span>
+                AI Voice Assessment
+            </div>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <div class="assessment-card">
+            <div class="avatar-container">
+                <div class="avatar">
+                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <circle cx="12" cy="8" r="4"/>
+                        <path d="M20 21a8 8 0 0 0-16 0"/>
+                    </svg>
+                </div>
+                <div class="avatar-ring" id="avatar-ring"></div>
+            </div>
+
+            <h2 class="assessment-title">Dr. Smith</h2>
+            <p class="assessment-subtitle">Practice your patient consultation skills with our AI-powered patient simulation.</p>
+
+            <div class="status-indicator ready" id="status-indicator">
+                <span class="status-dot"></span>
+                <span id="status-text">Ready to begin</span>
+            </div>
+
+            <button class="control-button" id="control-button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="button-icon">
+                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                    <line x1="12" y1="19" x2="12" y2="23"/>
+                    <line x1="8" y1="23" x2="16" y2="23"/>
+                </svg>
+            </button>
+            <p class="control-hint" id="control-hint">Click to start speaking</p>
+
+            <div class="transcript-area">
+                <div class="transcript-title">Conversation Transcript</div>
+                <div id="transcript-content">
+                    <p class="transcript-empty">Your conversation will appear here...</p>
+                </div>
+            </div>
+
+            <div class="footer-actions">
+                <button class="btn btn-secondary">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="16" x2="12" y2="12"/>
+                        <line x1="12" y1="8" x2="12.01" y2="8"/>
+                    </svg>
+                    Help
+                </button>
+                <button class="btn btn-danger" id="end-button">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                    </svg>
+                    End Assessment
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Instructions Modal -->
+    <div class="instructions-overlay" id="instructions-overlay">
+        <div class="instructions-modal">
+            <div class="instructions-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                    <line x1="12" y1="19" x2="12" y2="23"/>
+                    <line x1="8" y1="23" x2="16" y2="23"/>
+                </svg>
+            </div>
+            <h2 class="instructions-title">Patient Consultation Practice</h2>
+            <p class="instructions-text">You'll be practicing your consultation skills with an AI patient named Dr. Smith. Speak naturally as you would in a real consultation.</p>
+
+            <ul class="instructions-list">
+                <li>
+                    <span class="check">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                    </span>
+                    <span>Click the microphone button to begin speaking</span>
+                </li>
+                <li>
+                    <span class="check">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                    </span>
+                    <span>The AI will respond naturally to your questions</span>
+                </li>
+                <li>
+                    <span class="check">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                    </span>
+                    <span>A transcript will be recorded for your review</span>
+                </li>
+            </ul>
+
+            <button class="btn btn-primary" id="start-button">Begin Assessment</button>
+        </div>
+    </div>
+
+    <script>
+        // State management
+        let isActive = false;
+        let currentState = 'ready'; // ready, listening, speaking, processing
+
+        const controlButton = document.getElementById('control-button');
+        const buttonIcon = document.getElementById('button-icon');
+        const statusIndicator = document.getElementById('status-indicator');
+        const statusText = document.getElementById('status-text');
+        const avatarRing = document.getElementById('avatar-ring');
+        const controlHint = document.getElementById('control-hint');
+        const instructionsOverlay = document.getElementById('instructions-overlay');
+        const startButton = document.getElementById('start-button');
+        const transcriptContent = document.getElementById('transcript-content');
+
+        // State configurations
+        const states = {
+            ready: {
+                statusClass: 'ready',
+                statusText: 'Ready to begin',
+                hint: 'Click to start speaking',
+                ringClass: ''
+            },
+            listening: {
+                statusClass: 'listening',
+                statusText: 'Listening...',
+                hint: 'Click to stop',
+                ringClass: 'listening'
+            },
+            speaking: {
+                statusClass: 'speaking',
+                statusText: 'Speaking...',
+                hint: 'AI is responding',
+                ringClass: 'speaking'
+            },
+            processing: {
+                statusClass: 'processing',
+                statusText: 'Processing...',
+                hint: 'Please wait',
+                ringClass: 'processing'
+            }
+        };
+
+        function updateState(newState) {
+            currentState = newState;
+            const config = states[newState];
+
+            statusIndicator.className = 'status-indicator ' + config.statusClass;
+            statusText.textContent = config.statusText;
+            controlHint.textContent = config.hint;
+            avatarRing.className = 'avatar-ring ' + config.ringClass;
+
+            if (newState === 'listening') {
+                controlButton.classList.add('active');
+                buttonIcon.innerHTML = '<rect x="6" y="6" width="12" height="12" fill="currentColor"/>';
+            } else {
+                controlButton.classList.remove('active');
+                buttonIcon.innerHTML = `
+                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                    <line x1="12" y1="19" x2="12" y2="23"/>
+                    <line x1="8" y1="23" x2="16" y2="23"/>
+                `;
+            }
+        }
+
+        // Demo conversation
+        const demoMessages = [
+            { type: 'ai', text: "Hello, I'm Dr. Smith. What brings you in today?" },
+            { type: 'user', text: "Hi Dr. Smith, I've been having some headaches lately." },
+            { type: 'ai', text: "I see. Can you tell me more about these headaches? How often do they occur and where do you feel the pain?" }
+        ];
+
+        function addTranscriptMessage(type, text) {
+            if (transcriptContent.querySelector('.transcript-empty')) {
+                transcriptContent.innerHTML = '';
+            }
+            const message = document.createElement('p');
+            message.className = 'transcript-message ' + type;
+            message.textContent = text;
+            transcriptContent.appendChild(message);
+            transcriptContent.scrollTop = transcriptContent.scrollHeight;
+        }
+
+        // Control button click handler
+        controlButton.addEventListener('click', () => {
+            if (currentState === 'ready' || currentState === 'speaking') {
+                updateState('listening');
+                isActive = true;
+            } else if (currentState === 'listening') {
+                updateState('processing');
+
+                // Simulate processing and AI response
+                setTimeout(() => {
+                    addTranscriptMessage('user', 'I wanted to discuss my recent test results.');
+                    updateState('speaking');
+
+                    setTimeout(() => {
+                        addTranscriptMessage('ai', 'Of course, I\'d be happy to go over your test results with you. Let me pull those up.');
+                        updateState('ready');
+                    }, 2000);
+                }, 1000);
+            }
+        });
+
+        // Start button handler
+        startButton.addEventListener('click', () => {
+            instructionsOverlay.classList.add('hidden');
+
+            // Show initial AI greeting
+            setTimeout(() => {
+                updateState('speaking');
+                setTimeout(() => {
+                    addTranscriptMessage('ai', "Hello, I'm Dr. Smith. What brings you in today?");
+                    updateState('ready');
+                }, 1500);
+            }, 500);
+        });
+
+        // End assessment button
+        document.getElementById('end-button').addEventListener('click', () => {
+            if (confirm('Are you sure you want to end this assessment?')) {
+                alert('Assessment ended. Your transcript has been saved.');
+            }
+        });
+    </script>
+</body>
+</html>
