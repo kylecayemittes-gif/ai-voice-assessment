@@ -512,7 +512,7 @@
 <body>
     <header class="header">
         <div class="header-content">
-            <h1>Client Conversation Practice</h1>
+            <h1 id="page-title">Client Conversation Practice</h1>
             <div class="header-badge">
                 <span class="dot"></span>
                 AI Voice Assessment
@@ -532,8 +532,8 @@
                 <div class="avatar-ring" id="avatar-ring"></div>
             </div>
 
-            <h2 class="assessment-title">Alex Rivera</h2>
-            <p class="assessment-subtitle">Practice your client communication skills with our AI-powered client simulation.</p>
+            <h2 class="assessment-title" id="persona-title">Alex Rivera</h2>
+            <p class="assessment-subtitle" id="assessment-subtitle">Practice your client communication skills with our AI-powered client simulation.</p>
 
             <div class="status-indicator ready" id="status-indicator">
                 <span class="status-dot"></span>
@@ -587,8 +587,8 @@
                     <line x1="8" y1="23" x2="16" y2="23"/>
                 </svg>
             </div>
-            <h2 class="instructions-title">Client Conversation Practice</h2>
-            <p class="instructions-text">You'll be practicing your client communication with an AI persona named Alex Rivera. Speak naturally as you would in a real client or stakeholder conversation.</p>
+            <h2 class="instructions-title" id="instructions-title">Client Conversation Practice</h2>
+            <p class="instructions-text" id="instructions-text">You'll be practicing your client communication with an AI persona named Alex Rivera. Speak naturally as you would in a real client or stakeholder conversation.</p>
 
             <ul class="instructions-list">
                 <li>
@@ -622,13 +622,40 @@
     </div>
 
     <script>
-        // Load admin-configured avatar from localStorage
+        // Load admin-configured avatar and config from localStorage
         (function() {
             try {
                 const dataUrl = localStorage.getItem('aiVoiceAssessmentAvatar');
                 const avatarEl = document.querySelector('.avatar');
                 if (dataUrl && avatarEl) {
                     avatarEl.innerHTML = '<img src="' + dataUrl + '" alt="Avatar">';
+                }
+                const configJson = localStorage.getItem('aiVoiceAssessmentConfig');
+                if (configJson) {
+                    const c = JSON.parse(configJson);
+                    if (c.assessmentName) {
+                        const t = document.getElementById('page-title');
+                        const it = document.getElementById('instructions-title');
+                        if (t) t.textContent = c.assessmentName;
+                        if (it) it.textContent = c.assessmentName;
+                    }
+                    if (c.personaName) {
+                        const pt = document.getElementById('persona-title');
+                        if (pt) pt.textContent = c.personaName;
+                    }
+                    if (c.learnerInstructions) {
+                        const itext = document.getElementById('instructions-text');
+                        if (itext) itext.textContent = c.learnerInstructions;
+                    }
+                    let sub = 'Practice your client communication skills with our AI-powered client simulation.';
+                    if (c.timeLimitMinutes > 0 || c.maxTurns > 0) {
+                        const parts = [];
+                        if (c.timeLimitMinutes > 0) parts.push(c.timeLimitMinutes + ' min');
+                        if (c.maxTurns > 0) parts.push(c.maxTurns + ' max turns');
+                        sub += ' (' + parts.join(', ') + ')';
+                    }
+                    const st = document.getElementById('assessment-subtitle');
+                    if (st) st.textContent = sub;
                 }
             } catch (e) {}
         })();

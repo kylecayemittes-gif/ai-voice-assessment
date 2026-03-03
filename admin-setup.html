@@ -28,7 +28,7 @@
         }
 
         .header-content {
-            max-width: 900px;
+            max-width: 1200px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
@@ -77,10 +77,61 @@
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 24px;
         }
+
+        .admin-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-areas:
+                "avatar voice"
+                "learning learning"
+                "identity identity"
+                "grading tools";
+            gap: 20px;
+            align-items: stretch;
+        }
+
+        .admin-grid .card {
+            margin-bottom: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .grid-avatar { grid-area: avatar; }
+        .grid-voice { grid-area: voice; }
+        .grid-learning { grid-area: learning; }
+        .grid-identity { grid-area: identity; }
+        .grid-grading { grid-area: grading; }
+        .grid-tools { grid-area: tools; }
+
+        .card-subsection {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e8e8e8;
+        }
+        .card-subsection-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2d3b45;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .boundaries-toggle-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .boundaries-toggle-row:last-of-type { border-bottom: none; }
+        .boundaries-options { margin-top: 8px; display: none; }
+        .boundaries-options.visible { display: block; }
 
         .card {
             background: #ffffff;
@@ -439,7 +490,39 @@
             gap: 20px;
         }
 
+        .mode-only { transition: opacity 0.2s ease; }
+        .mode-only.hidden { display: none !important; }
+
+        .question-list { list-style: none; }
+        .question-list li {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .question-list li input { flex: 1; }
+        .question-list .btn-remove {
+            padding: 8px 12px;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+        .btn-add-question {
+            margin-top: 8px;
+        }
+        textarea.short { min-height: 80px; }
+
         @media (max-width: 768px) {
+            .admin-grid {
+                grid-template-columns: 1fr;
+                grid-template-areas:
+                    "avatar"
+                    "voice"
+                    "learning"
+                    "identity"
+                    "grading"
+                    "tools";
+            }
+
             .avatar-section {
                 grid-template-columns: 1fr;
             }
@@ -460,14 +543,15 @@
             <h1>AI Voice Assessment Setup</h1>
             <div class="header-actions">
                 <button class="btn btn-secondary">Cancel</button>
-                <button class="btn btn-primary">Save Assessment</button>
+                <button class="btn btn-primary" id="save-assessment-btn">Save Assessment</button>
             </div>
         </div>
     </header>
 
     <main class="container">
-        <!-- Avatar Setup -->
-        <section class="card">
+        <div class="admin-grid">
+        <!-- Avatar Setup (first) -->
+        <section class="card grid-avatar">
             <div class="card-header">
                 <div class="icon">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -511,90 +595,40 @@
                     </div>
                 </div>
             </div>
-        </section>
-
-        <!-- Identity & Persona -->
-        <section class="card">
-            <div class="card-header">
-                <div class="icon">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                        <circle cx="12" cy="7" r="4"/>
-                    </svg>
-                </div>
-                <h2>Identity & Persona</h2>
-            </div>
-
-            <div class="form-group">
-                <label for="assessment-name">Assessment Name</label>
-                <input type="text" id="assessment-name" placeholder="e.g., Client Check-in Practice">
-            </div>
-
-            <div class="form-group">
-                <label>Assessment Mode</label>
-                <div class="toggle-group">
-                    <div class="toggle-option active">Conversational Q&A</div>
-                    <div class="toggle-option">Role-Play Scenario</div>
-                </div>
-            </div>
-
-            <div class="two-column">
-                <div class="form-group">
-                    <label for="persona-name">Persona Name</label>
-                    <input type="text" id="persona-name" placeholder="e.g., Alex Rivera, Client">
-                </div>
-                <div class="form-group">
-                    <label for="persona-role">Persona Role</label>
-                    <input type="text" id="persona-role" placeholder="e.g., Hiring Manager, Client">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="identity-prompt">
-                    Identity Prompt
-                    <span class="label-description">System instructions defining how the AI should behave and respond</span>
-                </label>
-                <textarea id="identity-prompt" placeholder="You are a client meeting with your account manager. You have questions about the recent deliverable and timeline. Be professional but ask clarifying questions when needed..."></textarea>
-            </div>
-        </section>
-
-        <!-- Voice Selection -->
-        <section class="card">
-            <div class="card-header">
-                <div class="icon">
+            <div class="card-subsection">
+                <div class="card-subsection-title">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
                         <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
                         <line x1="12" y1="19" x2="12" y2="23"/>
                         <line x1="8" y1="23" x2="16" y2="23"/>
                     </svg>
+                    Voice Selection
                 </div>
-                <h2>Voice Selection</h2>
-            </div>
-
-            <div class="form-group">
-                <label for="voice-select">AI Voice</label>
-                <div class="voice-selector">
-                    <select id="voice-select">
-                        <option value="alloy">Alloy - Neutral and balanced</option>
-                        <option value="echo">Echo - Warm and conversational</option>
-                        <option value="fable">Fable - Expressive and dynamic</option>
-                        <option value="onyx">Onyx - Deep and authoritative</option>
-                        <option value="nova">Nova - Friendly and upbeat</option>
-                        <option value="shimmer">Shimmer - Clear and professional</option>
-                    </select>
-                    <button class="btn btn-secondary btn-preview">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <polygon points="5 3 19 12 5 21 5 3"/>
-                        </svg>
-                        Preview
-                    </button>
+                <div class="form-group">
+                    <label for="voice-select">AI Voice</label>
+                    <div class="voice-selector">
+                        <select id="voice-select">
+                            <option value="alloy">Alloy - Neutral and balanced</option>
+                            <option value="echo">Echo - Warm and conversational</option>
+                            <option value="fable">Fable - Expressive and dynamic</option>
+                            <option value="onyx">Onyx - Deep and authoritative</option>
+                            <option value="nova">Nova - Friendly and upbeat</option>
+                            <option value="shimmer">Shimmer - Clear and professional</option>
+                        </select>
+                        <button class="btn btn-secondary btn-preview">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <polygon points="5 3 19 12 5 21 5 3"/>
+                            </svg>
+                            Preview
+                        </button>
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- Voice Settings -->
-        <section class="card">
+        <section class="card grid-voice">
             <div class="card-header">
                 <div class="icon">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -604,7 +638,6 @@
                 </div>
                 <h2>Voice Settings</h2>
             </div>
-
             <div class="form-group">
                 <label>Turn Detection Mode</label>
                 <div class="toggle-group">
@@ -613,7 +646,6 @@
                 </div>
                 <p class="label-description" style="margin-top: 8px;">Server VAD detects silence to determine turn end. Semantic uses AI to understand conversation flow.</p>
             </div>
-
             <div class="form-group">
                 <label>Silence Duration Threshold</label>
                 <div class="slider-group">
@@ -624,7 +656,6 @@
                 </div>
                 <p class="label-description">How long to wait after silence before considering the turn complete</p>
             </div>
-
             <div class="form-group">
                 <label>Voice Activity Padding</label>
                 <div class="slider-group">
@@ -635,7 +666,6 @@
                 </div>
                 <p class="label-description">Extra audio captured before and after detected speech</p>
             </div>
-
             <div class="form-group">
                 <div class="switch-row" style="padding-top: 0;">
                     <div>
@@ -650,8 +680,206 @@
             </div>
         </section>
 
+        <!-- Learning Design -->
+        <section class="card grid-learning">
+            <div class="card-header">
+                <div class="icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                    </svg>
+                </div>
+                <h2>Learning Design</h2>
+            </div>
+            <div class="form-group">
+                <label for="learning-objectives">
+                    Learning Objectives
+                    <span class="label-description">What should learners demonstrate? These can be shown to learners or used for alignment.</span>
+                </label>
+                <textarea id="learning-objectives" class="short" placeholder="e.g., Explain key compliance steps; Respond professionally to client objections; Demonstrate active listening..."></textarea>
+            </div>
+            <div class="form-group">
+                <label for="scenario-summary">
+                    Scenario / Pedagogical Summary
+                    <span class="label-description">Brief description of the scenario and how the AI persona should behave (for your reference or rubric alignment).</span>
+                </label>
+                <textarea id="scenario-summary" class="short" placeholder="e.g., Client check-in; learner plays account manager; AI plays client with questions about timeline and scope..."></textarea>
+            </div>
+            <div class="card-subsection">
+                <div class="card-subsection-title">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                    Assessment Boundaries
+                </div>
+                <p class="label-description" style="margin-bottom: 12px;">Optional. Turn on to set time or turn limits.</p>
+                <div class="boundaries-toggle-row">
+                    <div>
+                        <div class="switch-label">Time limit</div>
+                        <div class="switch-description">Maximum duration for the assessment</div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="toggle-time-limit">
+                        <span class="switch-slider"></span>
+                    </label>
+                </div>
+                <div class="boundaries-options" id="time-limit-options">
+                    <div class="form-group">
+                        <label for="time-limit">Minutes</label>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <input type="number" id="time-limit" min="0" value="10" style="max-width: 100px;"> <span>minutes</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="boundaries-toggle-row">
+                    <div>
+                        <div class="switch-label">Max turns</div>
+                        <div class="switch-description">Maximum back-and-forth exchanges</div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="toggle-max-turns">
+                        <span class="switch-slider"></span>
+                    </label>
+                </div>
+                <div class="boundaries-options" id="max-turns-options">
+                    <div class="form-group">
+                        <label for="max-turns">Max turns</label>
+                        <input type="number" id="max-turns" min="0" value="0" style="max-width: 100px;">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Identity & Persona -->
+        <section class="card grid-identity">
+            <div class="card-header">
+                <div class="icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                </div>
+                <h2>Identity & Persona</h2>
+            </div>
+            <div class="form-group">
+                <label for="assessment-name">Assessment Name</label>
+                <input type="text" id="assessment-name" placeholder="e.g., Client Check-in Practice">
+            </div>
+            <div class="form-group">
+                <label>Assessment Mode</label>
+                <div class="toggle-group" id="assessment-mode-group">
+                    <div class="toggle-option active" data-mode="qa">Conversational Q&A</div>
+                    <div class="toggle-option" data-mode="roleplay">Role-Play Scenario</div>
+                </div>
+            </div>
+            <div class="form-group mode-only mode-only-roleplay">
+                <label>Scenario &amp; Persona (Role-Play)</label>
+                <span class="label-description">Define who the AI is and how it should behave.</span>
+            </div>
+            <div class="two-column mode-only mode-only-roleplay">
+                <div class="form-group">
+                    <label for="persona-name">Persona Name</label>
+                    <input type="text" id="persona-name" placeholder="e.g., Alex Rivera, Client">
+                </div>
+                <div class="form-group">
+                    <label for="persona-role">Persona Role</label>
+                    <input type="text" id="persona-role" placeholder="e.g., Hiring Manager, Client">
+                </div>
+            </div>
+            <div class="form-group mode-only mode-only-roleplay">
+                <label for="identity-prompt">
+                    Identity Prompt
+                    <span class="label-description">System instructions defining how the AI should behave and respond</span>
+                </label>
+                <textarea id="identity-prompt" placeholder="You are a client meeting with your account manager. You have questions about the recent deliverable and timeline. Be professional but ask clarifying questions when needed..."></textarea>
+            </div>
+            <div class="form-group mode-only mode-only-qa">
+                <label>Question Bank (Q&amp;A)</label>
+                <span class="label-description">Define the questions the AI will ask. Order can be fixed or randomized.</span>
+            </div>
+            <div class="form-group mode-only mode-only-qa">
+                <label>Number of questions to ask</label>
+                <input type="number" id="question-count" min="1" max="50" value="5" style="max-width: 100px;">
+            </div>
+            <div class="form-group mode-only mode-only-qa">
+                <label>Question order</label>
+                <div class="checkbox-group" style="margin-top: 8px;">
+                    <label class="checkbox-item">
+                        <input type="radio" name="question-order" value="fixed" checked>
+                        <span>Fixed order</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="radio" name="question-order" value="random">
+                        <span>Randomized</span>
+                    </label>
+                </div>
+            </div>
+            <div class="form-group mode-only mode-only-qa">
+                <label>Questions</label>
+                <ul class="question-list" id="question-list">
+                    <li><input type="text" placeholder="Question 1" class="question-input"><button type="button" class="btn btn-secondary btn-remove">Remove</button></li>
+                    <li><input type="text" placeholder="Question 2" class="question-input"><button type="button" class="btn btn-secondary btn-remove">Remove</button></li>
+                    <li><input type="text" placeholder="Question 3" class="question-input"><button type="button" class="btn btn-secondary btn-remove">Remove</button></li>
+                </ul>
+                <button type="button" class="btn btn-secondary btn-add-question" id="add-question">+ Add question</button>
+            </div>
+            <div class="form-group" style="margin-top: 20px;">
+                <label for="learner-instructions">
+                    Learner-facing instructions
+                    <span class="label-description">What the learner sees before starting (scenario framing, role, time/turn limits). Critical for Role-Play so they know who they're supposed to be.</span>
+                </label>
+                <textarea id="learner-instructions" class="short" placeholder="e.g., You'll play the account manager. The AI will play the client, Alex Rivera. You have 10 minutes and up to 8 turns. Address their questions about the timeline and deliverable..."></textarea>
+            </div>
+        </section>
+
+        <!-- Grading Configuration -->
+        <section class="card grid-grading">
+            <div class="card-header">
+                <div class="icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 20V10"/>
+                        <path d="M18 20V4"/>
+                        <path d="M6 20v-4"/>
+                    </svg>
+                </div>
+                <h2>Grading Configuration</h2>
+            </div>
+            <div class="form-group">
+                <label>Scoring type</label>
+                <span class="label-description">How this assessment is scored. This changes what learners see and how results are recorded.</span>
+                <div class="checkbox-group" style="margin-top: 12px;">
+                    <label class="checkbox-item">
+                        <input type="radio" name="scoring-type" value="feedback-only" checked>
+                        <span>Feedback only — No grade; narrative feedback only</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="radio" name="scoring-type" value="pass-fail">
+                        <span>Pass / Fail — Single threshold</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="radio" name="scoring-type" value="rubric">
+                        <span>Rubric-based score — Score from rubric criteria</span>
+                    </label>
+                </div>
+            </div>
+            <div class="form-group" id="pass-fail-threshold-group" style="display: none;">
+                <label for="pass-fail-threshold">Pass threshold (%)</label>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <input type="number" id="pass-fail-threshold" min="0" max="100" value="70" style="max-width: 80px;"> <span>% and above = Pass</span>
+                </div>
+            </div>
+            <div class="form-group" id="rubric-select-group" style="display: none;">
+                <label for="rubric-select">Rubric</label>
+                <select id="rubric-select">
+                    <option value="">— Select rubric —</option>
+                    <option value="default">Voice Assessment Rubric (default)</option>
+                </select>
+            </div>
+        </section>
+
         <!-- Tool Integrations -->
-        <section class="card">
+        <section class="card grid-tools">
             <div class="card-header">
                 <div class="icon">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -712,6 +940,7 @@
                 </div>
             </div>
         </section>
+        </div>
     </main>
 
     <script>
@@ -721,8 +950,48 @@
                 option.addEventListener('click', () => {
                     group.querySelectorAll('.toggle-option').forEach(o => o.classList.remove('active'));
                     option.classList.add('active');
+                    if (group.id === 'assessment-mode-group') updateModeVisibility();
                 });
             });
+        });
+
+        function updateModeVisibility() {
+            const group = document.getElementById('assessment-mode-group');
+            const active = group.querySelector('.toggle-option.active');
+            const mode = active ? active.getAttribute('data-mode') : 'qa';
+            document.querySelectorAll('.mode-only-qa').forEach(el => el.classList.toggle('hidden', mode !== 'qa'));
+            document.querySelectorAll('.mode-only-roleplay').forEach(el => el.classList.toggle('hidden', mode !== 'roleplay'));
+        }
+        updateModeVisibility();
+
+        // Question bank: add/remove
+        document.getElementById('add-question').addEventListener('click', function() {
+            const list = document.getElementById('question-list');
+            const n = list.querySelectorAll('li').length + 1;
+            const li = document.createElement('li');
+            li.innerHTML = '<input type="text" placeholder="Question ' + n + '" class="question-input"><button type="button" class="btn btn-secondary btn-remove">Remove</button>';
+            li.querySelector('.btn-remove').addEventListener('click', function() { li.remove(); });
+            list.appendChild(li);
+        });
+        document.getElementById('question-list').addEventListener('click', function(e) {
+            if (e.target.classList.contains('btn-remove')) e.target.closest('li').remove();
+        });
+
+        // Grading type visibility
+        document.querySelectorAll('input[name="scoring-type"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const v = this.value;
+                document.getElementById('pass-fail-threshold-group').style.display = v === 'pass-fail' ? 'block' : 'none';
+                document.getElementById('rubric-select-group').style.display = v === 'rubric' ? 'block' : 'none';
+            });
+        });
+
+        // Assessment boundaries toggles
+        document.getElementById('toggle-time-limit').addEventListener('change', function() {
+            document.getElementById('time-limit-options').classList.toggle('visible', this.checked);
+        });
+        document.getElementById('toggle-max-turns').addEventListener('change', function() {
+            document.getElementById('max-turns-options').classList.toggle('visible', this.checked);
         });
 
         const AVATAR_STORAGE_KEY = 'aiVoiceAssessmentAvatar';
@@ -785,6 +1054,36 @@
 
         document.getElementById('vad-padding').addEventListener('input', function() {
             this.closest('.slider-group').querySelector('.slider-value').textContent = this.value + 'ms';
+        });
+
+        // Save assessment config for learner view
+        const CONFIG_KEY = 'aiVoiceAssessmentConfig';
+        document.getElementById('save-assessment-btn').addEventListener('click', function() {
+            const modeGroup = document.getElementById('assessment-mode-group');
+            const mode = modeGroup.querySelector('.toggle-option.active').getAttribute('data-mode');
+            const questions = [];
+            document.querySelectorAll('#question-list .question-input').forEach(inp => {
+                if (inp.value.trim()) questions.push(inp.value.trim());
+            });
+            const config = {
+                assessmentName: document.getElementById('assessment-name').value.trim() || 'Client Conversation Practice',
+                personaName: document.getElementById('persona-name').value.trim() || 'Alex Rivera',
+                learnerInstructions: document.getElementById('learner-instructions').value.trim(),
+                timeLimitMinutes: document.getElementById('toggle-time-limit').checked ? (parseInt(document.getElementById('time-limit').value, 10) || 0) : 0,
+                maxTurns: document.getElementById('toggle-max-turns').checked ? (parseInt(document.getElementById('max-turns').value, 10) || 0) : 0,
+                mode: mode,
+                questionCount: parseInt(document.getElementById('question-count').value, 10) || 5,
+                questionOrder: (document.querySelector('input[name="question-order"]:checked') || {}).value || 'fixed',
+                questions: questions,
+                scoringType: (document.querySelector('input[name="scoring-type"]:checked') || {}).value || 'feedback-only',
+                passFailThreshold: parseInt(document.getElementById('pass-fail-threshold').value, 10) || 70
+            };
+            try {
+                localStorage.setItem(CONFIG_KEY, JSON.stringify(config));
+                alert('Assessment saved. Learner view will use this config.');
+            } catch (e) {
+                alert('Could not save config: ' + (e.message || 'storage full'));
+            }
         });
     </script>
 </body>
