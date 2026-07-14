@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_canvas_horizon_storybook=self.webpackChunk_canvas_horizon_storybook||[]).push([["4004"],{"../../libs/i18n/dist/I18nProvider.d.ts"(s,o,n){n.r(o)}}]);

@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_canvas_horizon_storybook=self.webpackChunk_canvas_horizon_storybook||[]).push([["99"],{"../../libs/i18n/dist/useUserLocale.d.ts"(s,o,e){e.r(o)}}]);

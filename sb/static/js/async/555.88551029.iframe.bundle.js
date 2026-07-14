@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_canvas_horizon_storybook=self.webpackChunk_canvas_horizon_storybook||[]).push([["555"],{"../../libs/i18n/dist/i18n.d.ts"(s,e,n){n.r(e),n.d(e,{default:()=>o});let o=n("../../node_modules/.pnpm/i18next@23.16.8/node_modules/i18next/dist/esm/i18next.js").Ay}}]);

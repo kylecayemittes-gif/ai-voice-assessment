@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_canvas_horizon_storybook=self.webpackChunk_canvas_horizon_storybook||[]).push([["4840"],{"../../libs/i18n/dist/RTLProvider.d.ts"(s,o,r){r.r(o)}}]);

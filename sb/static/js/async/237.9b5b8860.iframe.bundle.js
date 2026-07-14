@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_canvas_horizon_storybook=self.webpackChunk_canvas_horizon_storybook||[]).push([["237"],{"../../node_modules/.pnpm/@fontsource+atkinson-hyperlegible-next@5.2.7/node_modules/@fontsource/atkinson-hyperlegible-next/latin-ext-200.css"(e,o,n){n.r(o)}}]);

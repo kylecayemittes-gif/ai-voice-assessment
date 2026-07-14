@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_canvas_horizon_storybook=self.webpackChunk_canvas_horizon_storybook||[]).push([["4193"],{"../../libs/i18n/dist/translationLoader.d.ts"(s,o,a){a.r(o)}}]);

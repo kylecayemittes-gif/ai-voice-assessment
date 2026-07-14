@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_canvas_horizon_storybook=self.webpackChunk_canvas_horizon_storybook||[]).push([["4186"],{"../../libs/i18n/dist/446.mjs"(s,o,n){n.r(o),n.d(o,{ids:()=>t,modules:()=>i});let t=["446"],i={"./src/translations/zh-HK/zh-HK.json":function(s){s.exports={}}}}}]);

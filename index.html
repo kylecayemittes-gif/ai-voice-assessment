@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LLM Voice Assignment Prototype</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f4f6f8;
+        --card: #ffffff;
+        --text: #1f2933;
+        --muted: #5c6770;
+        --accent: #0374b5;
+        --accent-hover: #025a8c;
+        --border: #d7dde2;
+        --learner: #6b4c9a;
+        --learner-hover: #553d7a;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Atkinson Hyperlegible Next", "Segoe UI", sans-serif;
+        background: linear-gradient(180deg, #eef3f7 0%, var(--bg) 40%);
+        color: var(--text);
+      }
+
+      main {
+        max-width: 880px;
+        margin: 0 auto;
+        padding: 3rem 1.5rem 4rem;
+      }
+
+      header {
+        margin-bottom: 2.5rem;
+      }
+
+      h1 {
+        margin: 0 0 0.75rem;
+        font-size: clamp(1.75rem, 4vw, 2.5rem);
+        line-height: 1.15;
+      }
+
+      .subtitle {
+        margin: 0;
+        max-width: 42rem;
+        color: var(--muted);
+        font-size: 1.05rem;
+        line-height: 1.6;
+      }
+
+      .cards {
+        display: grid;
+        gap: 1rem;
+      }
+
+      @media (min-width: 720px) {
+        .cards {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+      }
+
+      .card h2 {
+        margin: 0 0 0.5rem;
+        font-size: 1.25rem;
+      }
+
+      .card p {
+        margin: 0 0 1.25rem;
+        color: var(--muted);
+        line-height: 1.55;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        width: 100%;
+        padding: 0.85rem 1rem;
+        border-radius: 999px;
+        border: none;
+        font: inherit;
+        font-weight: 600;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background 0.15s ease;
+      }
+
+      .button-educator {
+        background: var(--accent);
+        color: #fff;
+      }
+
+      .button-educator:hover {
+        background: var(--accent-hover);
+      }
+
+      .button-learner {
+        background: var(--learner);
+        color: #fff;
+      }
+
+      .button-learner:hover {
+        background: var(--learner-hover);
+      }
+
+      .secondary {
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--border);
+      }
+
+      .secondary h3 {
+        margin: 0 0 0.75rem;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--muted);
+      }
+
+      .links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+
+      .links a {
+        color: var(--accent);
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      .links a:hover {
+        text-decoration: underline;
+      }
+
+      footer {
+        margin-top: 2rem;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>LLM Voice Assignment Prototype</h1>
+        <p class="subtitle">
+          Clickable design prototype for the educator setup flow and learner voice
+          assessment experience. No login or backend required.
+        </p>
+      </header>
+
+      <section class="cards">
+        <article class="card">
+          <h2>Educator click path</h2>
+          <p>
+            Browse the Syncable Objects Library, create assignments and LLM
+            personas, and configure an LLM voice assignment end to end.
+          </p>
+          <a
+            class="button button-educator"
+            href="./sb/index.html?path=/story/clx-design-system-features-learning-provider-content-library-llm-voice-assignment-click-path--educator-click-path"
+          >
+            Open educator flow
+          </a>
+        </article>
+
+        <article class="card">
+          <h2>Learner experience</h2>
+          <p>
+            Try the voice session UI: start speaking, view the transcript, and
+            end the assessment.
+          </p>
+          <a
+            class="button button-learner"
+            href="./sb/index.html?path=/story/clx-design-system-features-learning-provider-content-library-llm-voice-assignment-click-path--learner-experience"
+          >
+            Open learner experience
+          </a>
+        </article>
+      </section>
+
+      <section class="secondary">
+        <h3>Component stories</h3>
+        <div class="links">
+          <a
+            href="./sb/index.html?path=/story/clx-design-system-features-learning-provider-content-library-llmassignmentoptions--default"
+            >LLM assignment options</a
+          >
+          <a
+            href="./sb/index.html?path=/story/clx-design-system-features-learning-provider-content-library-submissiontypeselector--default"
+            >Submission type selector</a
+          >
+        </div>
+      </section>
+
+      <footer>
+        Built from Canvas Horizon Storybook. Use the <strong>Assignments</strong>
+        and <strong>LLM Personas</strong> tabs in the educator flow.
+      </footer>
+    </main>
+  </body>
+</html>
