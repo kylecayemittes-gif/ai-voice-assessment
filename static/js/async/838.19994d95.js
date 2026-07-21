@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_canvas_horizon_llm_voice_prototype=self.webpackChunk_canvas_horizon_llm_voice_prototype||[]).push([["838"],{59733(e,a,n){n.r(a),n.d(a,{I18nextProvider:()=>t.xC,Trans:()=>t.x6,Translation:()=>t.wD,default:()=>r,i18n:()=>o.Ay,t:()=>o.t,useTranslation:()=>t.Bd});var o=n(69303),t=n(7195);let r=o.Ay}}]);
